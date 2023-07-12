@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Un jeu de Morpion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: center;
+            box-sizing: border-box;
+            border: 1px solid black;
+            padding: 10px 20px;
+        }
+
+        input {
+            width: 20px;
+            height: 20px;
+        }
+
+        table#morpion {
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        table#morpion td {
+            width: 100px;
+            height: 100px;
+        }
+
+        #play {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #play button {
+            width: 100px;
+            height: 50px;
+            font-size: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            border: none;
+            background-color: #ff5f5f;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>
+        Anti UI/UX Morpion
+    </h1>
+</header>
+<section>
+    <table id="morpion">
+        <tbody>
+        <tr>
+            <td id="1/1">
+
+            </td>
+            <td id="1/2">
+
+            </td>
+            <td id="1/3">
+
+            </td>
+        </tr>
+        <tr>
+            <td id="2/1">
+
+            </td>
+            <td id="2/2">
+
+            </td>
+            <td id="2/3">
+
+            </td>
+        </tr>
+        <tr>
+            <td id="3/1">
+
+            </td>
+            <td id="3/2">
+
+            </td>
+            <td id="3/3">
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+<section>
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>Colonne</th>
+            <th>Ligne</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>
+                <button onclick="generer()">
+                    Regénérer
+                </button>
+            </th>
+            <td>
+                <input type="checkbox" name="colonne" id="colonnei" checked>
+                <p id="colonne">
+                    X
+                </p>
+            </td>
+            <td>
+                <input type="checkbox" name="ligne" id="lignei" checked>
+                <p id="ligne">
+                    X
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+<section id="play">
+    <button id="jouer" onclick="jouer()" onmouseover="btnhovering()">
+        Jouer
+    </button>
+
+</section>
+<script type="text/javascript">
+    var hovercount = 0;
+    var ligne;
+    var colonne;
+    var tour = 'X';
+
+    function btnhovering() {
+        if (hovercount < 3) {
+            var btn = document.getElementById("jouer");
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            var buttonWidth = btn.offsetWidth;
+            var buttonHeight = btn.offsetHeight;
+
+            var maxLeft = windowWidth - buttonWidth;
+            var maxTop = windowHeight - buttonHeight;
+
+            var left = Math.floor(Math.random() * maxLeft);
+            var top = Math.floor(Math.random() * maxTop);
+
+            btn.style.position = "absolute";
+            btn.style.left = left + "px";
+            btn.style.top = top + "px";
+
+            hovercount++;
+        }
+    }
+
+
+    function generer() {
+        if (document.getElementById("colonnei").checked === true) {
+            colonne = Math.floor(Math.random() * 3) + 1;
+            document.getElementById("colonne").innerHTML = colonne;
+        }
+
+        if (document.getElementById("lignei").checked === true) {
+            ligne = Math.floor(Math.random() * 3) + 1;
+            document.getElementById("ligne").innerHTML = ligne;
+        }
+    }
+
+    function jouer() {
+        if (colonne !== undefined && ligne !== undefined) {
+            var cellule = document.getElementById(String(colonne) + "/" + String(ligne));
+            if (cellule.innerHTML !== 'X' && cellule.innerHTML !== 'O') {
+                cellule.innerHTML = tour;
+                tour = tour === 'X' ? 'O' : 'X';
+            } else {
+                alert("Case déjà cochée");
+            }
+        } else {
+            alert("Veuillez générer une colonne et une ligne avant de jouer.");
+        }
+
+        console.log(verifywin());
+        console.log(verifytie());
+
+        hovercount = 0;
+    }
+
+    function verifytie() {
+        var v = 0;
+        for (let i = 1; i <= 3; i++) {
+            for (let j = 1; j <= 3; j++) {
+                if (document.getElementById(String(i) + "/" + String(j)).innerHTML !== 'X' && document.getElementById(String(i) + "/" + String(j)).innerHTML !== 'O') {
+                    v++;
+                }
+            }
+        }
+        if (v === 0) {
+            alert("Match nul");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else {
+            return v;
+        }
+    }
+
+    function verifywin() {
+        if(document.getElementById("1/1").innerHTML === 'X' && document.getElementById("1/2").innerHTML === 'X' && document.getElementById("1/3").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("2/1").innerHTML === 'X' && document.getElementById("2/2").innerHTML === 'X' && document.getElementById("2/3").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("3/1").innerHTML === 'X' && document.getElementById("3/2").innerHTML === 'X' && document.getElementById("3/3").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/1").innerHTML === 'X' && document.getElementById("2/1").innerHTML === 'X' && document.getElementById("3/1").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/2").innerHTML === 'X' && document.getElementById("2/2").innerHTML === 'X' && document.getElementById("3/2").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/3").innerHTML === 'X' && document.getElementById("2/3").innerHTML === 'X' && document.getElementById("3/3").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/1").innerHTML === 'X' && document.getElementById("2/2").innerHTML === 'X' && document.getElementById("3/3").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/3").innerHTML === 'X' && document.getElementById("2/2").innerHTML === 'X' && document.getElementById("3/1").innerHTML === 'X') {
+            alert("X a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/1").innerHTML === 'O' && document.getElementById("1/2").innerHTML === 'O' && document.getElementById("1/3").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("2/1").innerHTML === 'O' && document.getElementById("2/2").innerHTML === 'O' && document.getElementById("2/3").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("3/1").innerHTML === 'O' && document.getElementById("3/2").innerHTML === 'O' && document.getElementById("3/3").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/1").innerHTML === 'O' && document.getElementById("2/1").innerHTML === 'O' && document.getElementById("3/1").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/2").innerHTML === 'O' && document.getElementById("2/2").innerHTML === 'O' && document.getElementById("3/2").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/3").innerHTML === 'O' && document.getElementById("2/3").innerHTML === 'O' && document.getElementById("3/3").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/1").innerHTML === 'O' && document.getElementById("2/2").innerHTML === 'O' && document.getElementById("3/3").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else if(document.getElementById("1/3").innerHTML === 'O' && document.getElementById("2/2").innerHTML === 'O' && document.getElementById("3/1").innerHTML === 'O') {
+            alert("O a gagné");
+            // recharge la page
+            window.location.reload();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+</script>
+</body>
+</html>
